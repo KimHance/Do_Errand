@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "173189693388",
+    "project_id": "do-housework",
+    "storage_bucket": "do-housework.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173189693388:android:ca2c4e59db763766e46769",
+        "android_client_info": {
+          "package_name": "com.example.toyproject_housework"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173189693388-339ih2n0b38fi8ksl6644ocbuufsntc2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_qgb6jtZaDCig4dvJALImXSku0aIzlto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173189693388-339ih2n0b38fi8ksl6644ocbuufsntc2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
