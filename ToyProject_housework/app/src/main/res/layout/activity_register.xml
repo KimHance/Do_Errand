@@ -7,19 +7,28 @@
     android:background="@color/main"
     android:backgroundTint="@color/main">
 
+    <TextView
+        android:id="@+id/copyright3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="copyright by @Kimansu"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <EditText
         android:id="@+id/register_passwd"
         android:layout_width="300dp"
         android:layout_height="41dp"
         android:backgroundTint="@color/white"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -42,7 +51,6 @@
         android:inputType="textPersonName"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -82,28 +90,72 @@
     <EditText
         android:id="@+id/register_name"
         android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_height="41dp"
         android:backgroundTint="@color/white"
         android:ems="10"
         android:hint="이름"
         android:inputType="textPersonName"
+        android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="@+id/register_passwd"
-        app:layout_constraintTop_toBottomOf="@+id/register_passwd" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
+
+    <Button
+        android:id="@+id/register_ok"
+        android:layout_width="108dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_white"
+        android:text="계정 생성"
+        android:textColor="@color/main"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/register_cancel"
+        app:layout_constraintTop_toTopOf="@+id/register_cancel" />
+
+    <Button
+        android:id="@+id/register_cancel"
+        android:layout_width="108dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_white"
+        android:text="취소"
+        android:textColor="@color/main"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/register_ok"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline4" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:cardCornerRadius="60dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/register_profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            tools:srcCompat="@tools:sample/avatars" />
+    </androidx.cardview.widget.CardView>
 
     <Spinner
-        android:id="@+id/spinner_family"
+        android:id="@+id/spinner"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/spinner_background"
-        android:scrollbarSize="4dp"
-        app:layout_constraintEnd_toEndOf="@+id/register_passwd"
-        app:layout_constraintTop_toTopOf="@+id/register_name"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"/>/>
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toBottomOf="@+id/register_name"
+        app:layout_constraintEnd_toEndOf="@+id/register_passwd" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
