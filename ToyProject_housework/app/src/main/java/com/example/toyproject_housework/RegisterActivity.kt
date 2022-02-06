@@ -75,7 +75,8 @@ class RegisterActivity : AppCompatActivity(){
                             "room" to "not yet"
                         )
                         db.collection("User")
-                            .add(data)
+                            .document(userIDString)
+                            .set(data)
                             .addOnSuccessListener {
                                 Log.d("db","파이어스토어 유저 저장 성공")
                             }
