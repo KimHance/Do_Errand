@@ -64,6 +64,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             android:background="@color/main"
             android:backgroundTint="@color/main"
             app:cardCornerRadius="25dp">
@@ -152,6 +153,7 @@
             android:weightSum="1">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/Recycler_todoList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginRight="10dp"
@@ -185,6 +187,7 @@
             android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/Recycler_noticeList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

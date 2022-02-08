@@ -3,6 +3,7 @@ package com.example.toyproject_housework
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -45,9 +46,23 @@ class MainActivity : AppCompatActivity() {
                 Log.d("디비","실패")
             }
 
+        val todoList = ArrayList<Todo>()
+        val noticeList = ArrayList<Notice>()
 
+        todoList.add(Todo(ContextCompat.getDrawable(this,R.drawable.ic_baseline_plus)!!,"추가하기","나","별거없음",true,"오늘"))
+        todoList.add(Todo(ContextCompat.getDrawable(this,R.drawable.ic_baseline_plus)!!,"이건 일단 임시","나","별거없음",true,"오늘"))
+        todoList.add(Todo(ContextCompat.getDrawable(this,R.drawable.ic_baseline_plus)!!,"임시 2","나","별거없음",true,"오늘"))
+        todoList.add(Todo(ContextCompat.getDrawable(this,R.drawable.ic_baseline_plus)!!,"임시 3","나","별거없음",true,"오늘"))
+        val todoAdapter = RecyclerTodoAdapter(todoList)
+        Recycler_todoList.adapter = todoAdapter
 
+        noticeList.add(Notice("나","임시 공지사항"))
+        noticeList.add(Notice("현수","응 임시"))
+        noticeList.add(Notice("접니다","킹현수;; 똑똑 지니어스"))
+        noticeList.add(Notice("저에요","ㅎㅇㅎㅇ 임시"))
 
+        val noticeAdapter = RecyclerNoticeAdapter(noticeList)
+        Recycler_noticeList.adapter = noticeAdapter
 
 
 
