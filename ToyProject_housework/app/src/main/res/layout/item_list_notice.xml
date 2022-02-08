@@ -2,8 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginRight="15dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="160dp"
@@ -21,7 +22,7 @@
             android:background="#752ECC71">
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="작성자 : OOO"
@@ -31,7 +32,7 @@
                 app:layout_constraintTop_toTopOf="@+id/guideline11" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/notice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="내용 : ......"
