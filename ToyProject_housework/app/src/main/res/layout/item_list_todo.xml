@@ -2,8 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginRight="15dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="100dp"
@@ -44,6 +45,7 @@
                 app:layout_constraintGuide_percent="0.25" />
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/todoImg"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/circle"
@@ -55,7 +57,7 @@
                 app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/todoTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="추가하기"
