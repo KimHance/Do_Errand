@@ -72,7 +72,9 @@ class RegisterActivity : AppCompatActivity(){
                             "userID" to userIDString,
                             "name" to register_name.text.toString(),
                             "role" to role,
-                            "room" to "not yet"
+                            "room" to "not yet",
+                            "add" to 0,
+                            "do" to 0
                         )
                         db.collection("User")
                             .document(userIDString)
