@@ -75,9 +75,6 @@ class RoomActivity : AppCompatActivity() {
                     .addOnSuccessListener {
                         // 메인으로 데이터 잘 넘어가는지 임시 확인
                         val intent = Intent(this, MainActivity::class.java)
-                        intent.putExtra("code",code)
-                        intent.putExtra("name",name)
-                        intent.putExtra("role",role)
                         startActivity(intent)
                         finish()
                     }

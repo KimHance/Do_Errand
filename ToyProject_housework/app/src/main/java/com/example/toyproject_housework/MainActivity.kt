@@ -1,16 +1,20 @@
 package com.example.toyproject_housework
 
+import android.content.Context
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.core.content.ContextCompat
+import android.view.View
+import androidx.annotation.RequiresApi
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.toast
+import kotlinx.android.synthetic.main.dialog_todo.*
+import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +25,15 @@ class MainActivity : AppCompatActivity() {
     var name : String = ""
     var role : String = ""
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    var date : LocalDate = LocalDate.now()
+
+    lateinit var todoAdapter: RecyclerTodoAdapter
+
+    val items = mutableListOf<Todo>()
+
+    lateinit var id : String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         val user = auth?.currentUser
         val userIDString = user?.uid.toString()
+        id = userIDString
 
         var ex = db.collection("User").whereEqualTo("role","아들")
         Log.d("실험","$ex")
@@ -46,15 +60,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("디비","실패")
             }
 
-        val todoList = ArrayList<Todo>()
         val noticeList = ArrayList<Notice>()
-
-        todoList.add(Todo(ContextCompat.getDrawable(this,R.drawable.ic_baseline_plus)!!,"추가하기","나","별거없음",true,"오늘"))
-        todoList.add(Todo(ContextCompat.getDrawable(this,R.drawable.ic_baseline_plus)!!,"이건 일단 임시","나","별거없음",true,"오늘"))
-        todoList.add(Todo(ContextCompat.getDrawable(this,R.drawable.ic_baseline_plus)!!,"임시 2","나","별거없음",true,"오늘"))
-        todoList.add(Todo(ContextCompat.getDrawable(this,R.drawable.ic_baseline_plus)!!,"임시 3","나","별거없음",true,"오늘"))
-        val todoAdapter = RecyclerTodoAdapter(todoList)
-        Recycler_todoList.adapter = todoAdapter
 
         noticeList.add(Notice("나","임시 공지사항"))
         noticeList.add(Notice("현수","응 임시"))
@@ -64,13 +70,12 @@ class MainActivity : AppCompatActivity() {
         val noticeAdapter = RecyclerNoticeAdapter(noticeList)
         Recycler_noticeList.adapter = noticeAdapter
 
+        initRecyclerTodo(this)
 
-
-
-
-
-
-
+//        main_userImg.setOnClickListener {
+//            val dialog = CustomDialog(this)
+//            dialog.showDialog()
+//        }
 
 
 //        out.setOnClickListener {
@@ -94,5 +99,44 @@ class MainActivity : AppCompatActivity() {
 //                }
 //        }
 
+    }
+
+
+    private fun initRecyclerTodo(context : Context) {
+        todoAdapter = RecyclerTodoAdapter(this)
+        Recycler_todoList.adapter = todoAdapter
+
+        items.apply{
+            add(Todo("추가하기","처음꺼","처음꺼",true,"현재"))
+        }
+
+        todoAdapter.items = items
+        todoAdapter.notifyDataSetChanged()
+        todoAdapter.setOnItemClickListener(object : RecyclerTodoAdapter.OnItemClickListener{
+            override fun onItemClick(v: View, data: Todo, pos: Int) {
+                Log.d("아이템","클릭됨")
+                val dialog = CustomDialog(context)
+                if(!data.add){
+                }else{
+                    // item의 데이터가 비어있음
+                    // 다이어로그에서 넘어온 데이터로 rdb 추가
+                        val userID = auth?.currentUser?.uid.toString()
+                    db.collection("User")
+                        .document(userID)
+                        .get()
+                        .addOnSuccessListener {
+                            dialog.showDialog(userID,it["room"].toString())
+                        }
+                    dialog.setOnClickListener(object :  CustomDialog.OnDialogClickListener {
+                        override fun onClicked(user: String, todo: String, todoContext: String) {
+                            //다이얼로그에서 데이터 넘겨줌
+                            items.apply{
+                                add(Todo(todo,user,todoContext,false,date.toString()))
+                            }
+                        }
+                    })
+                }
+            }
+        })
     }
 }
