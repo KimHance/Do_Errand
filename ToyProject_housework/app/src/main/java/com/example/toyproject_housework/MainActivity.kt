@@ -8,12 +8,8 @@ import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_todo.*
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
@@ -55,6 +51,12 @@ class MainActivity : AppCompatActivity() {
                 name = it["name"].toString()
                 role = it["role"].toString()
                 main_name.text = "${name}님"
+                when(role){
+                    "아빠" -> { main_userImg.setImageResource(R.drawable.green_dad) }
+                    "엄마" -> { main_userImg.setImageResource(R.drawable.green_mom) }
+                    "아들" -> { main_userImg.setImageResource(R.drawable.green_son) }
+                    "딸" -> { main_userImg.setImageResource(R.drawable.green_daughter) }
+                }
             }
             .addOnFailureListener {
                 Log.d("디비","실패")
