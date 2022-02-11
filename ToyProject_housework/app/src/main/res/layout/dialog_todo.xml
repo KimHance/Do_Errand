@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="250dp"
     android:background="@drawable/dialog_background">
@@ -31,17 +32,16 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintEnd_toStartOf="@+id/guideline16" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/dialog_img"
         android:layout_width="62dp"
         android:layout_height="62dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="2dp"
-        android:background="@drawable/circle"
+        android:clickable="true"
+        app:fabCustomSize="62dp"
         android:foreground="?attr/selectableItemBackground"
-        android:padding="2dp"
+        android:foregroundGravity="center"
         android:src="@drawable/ic_baseline_plus"
-        app:civ_circle_background_color="@color/white"
+        app:backgroundTint="@color/white"
         app:layout_constraintStart_toStartOf="@+id/guideline17"
         app:layout_constraintTop_toTopOf="@+id/guideline15" />
 
@@ -84,31 +84,68 @@
         app:layout_constraintGuide_percent="0.05" />
 
     <TextView
-        android:id="@+id/dialog_Todo"
+        android:id="@+id/dialog_userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:text="할 일"
+        android:layout_marginEnd="15dp"
+        android:text="등록자"
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/dialog_img"
-        app:layout_constraintEnd_toStartOf="@+id/guideline16"
-        app:layout_constraintStart_toEndOf="@+id/dialog_img"
+        app:layout_constraintEnd_toStartOf="@+id/guideline13"
         app:layout_constraintTop_toTopOf="@+id/dialog_img" />
 
-    <TextView
-        android:id="@+id/dialog_userName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="등록자 :  OOO"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/dialog_Todo"
-        app:layout_constraintEnd_toStartOf="@+id/guideline13"
-        app:layout_constraintStart_toEndOf="@+id/dialog_Todo"
-        app:layout_constraintTop_toTopOf="@+id/dialog_Todo" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_trash"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:clickable="false"
+        android:foregroundGravity="center"
+        android:visibility="invisible"
+        app:backgroundTint="@color/white"
+        app:borderWidth="0.5dp"
+        app:layout_constraintStart_toStartOf="@+id/floating_cooking"
+        app:layout_constraintTop_toTopOf="@+id/floating_shopping"
+        app:srcCompat="@drawable/recycle" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_clothes"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/clothespin"
+        android:clickable="false"
+        android:foregroundGravity="center"
+        android:visibility="invisible"
+        app:backgroundTint="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/floating_laudnry"
+        app:layout_constraintTop_toTopOf="@+id/floating_shopping"
+        app:srcCompat="@drawable/clothespin" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_pickup"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:clickable="false"
+        android:foregroundGravity="center"
+        android:visibility="invisible"
+        app:backgroundTint="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/floating_cleaning"
+        app:layout_constraintTop_toTopOf="@+id/floating_shopping"
+        app:srcCompat="@drawable/pickup" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_shopping"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:clickable="false"
+        android:foregroundGravity="center"
+        android:visibility="invisible"
+        app:backgroundTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/floating_dishes"
+        app:layout_constraintStart_toStartOf="@+id/floating_dishes"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_img"
+        app:srcCompat="@drawable/shopping" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -145,7 +182,97 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_dishes"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:clickable="false"
+        android:visibility="invisible"
+        app:backgroundTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/guideline14"
+        app:layout_constraintEnd_toStartOf="@+id/floating_laudnry"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline17"
+        app:layout_constraintTop_toBottomOf="@+id/floating_shopping"
+        app:srcCompat="@drawable/apron" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_laudnry"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:clickable="false"
+        android:foregroundGravity="center"
+        android:visibility="invisible"
+        app:backgroundTint="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/floating_cleaning"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/floating_dishes"
+        app:layout_constraintTop_toTopOf="@+id/floating_dishes"
+        app:srcCompat="@drawable/laundry" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_cooking"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:clickable="false"
+        android:foregroundGravity="center"
+        android:visibility="invisible"
+        app:backgroundTint="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/guideline13"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/floating_cleaning"
+        app:layout_constraintTop_toTopOf="@+id/floating_dishes"
+        app:srcCompat="@drawable/cooking" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_cleaning"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:clickable="false"
+        android:foregroundGravity="center"
+        android:visibility="invisible"
+        app:backgroundTint="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/floating_cooking"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/floating_laudnry"
+        app:layout_constraintTop_toTopOf="@+id/floating_dishes"
+        app:srcCompat="@drawable/cleaning" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_etc"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:clickable="false"
+        android:foregroundGravity="center"
+        android:visibility="invisible"
+        app:backgroundTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_img"
+        app:layout_constraintStart_toStartOf="@+id/floating_clothes"
+        app:srcCompat="@drawable/etc" />
+
+    <TextView
+        android:id="@+id/dialog_Todo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="기타"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_img"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_userName"
+        app:layout_constraintStart_toEndOf="@+id/floating_etc"
+        app:layout_constraintTop_toTopOf="@+id/dialog_img" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
