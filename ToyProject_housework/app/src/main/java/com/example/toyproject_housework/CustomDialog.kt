@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -18,6 +19,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.dialog_todo.*
+import kotlinx.android.synthetic.main.item_list_todo.view.*
 import java.time.LocalDate
 
 class CustomDialog(context: Context) : View.OnClickListener{
@@ -33,11 +35,12 @@ class CustomDialog(context: Context) : View.OnClickListener{
     private val dialog = Dialog(context)
     private lateinit var onClickListener : OnDialogClickListener
 
+
     fun setOnClickListener(listener : OnDialogClickListener){
         onClickListener = listener
     }
 
-    fun showDialog(id : String ,code : String){ //어댑터에서 추가,완료 모드인지 param 으로 받아와야함
+    fun showDialog(id : String ,code : String, todo : Todo ){ //어댑터에서 추가,완료 모드인지 param 으로 받아와야함
         dialog.setContentView(R.layout.dialog_todo)
         dialog.window!!.setLayout(WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT)
         dialog.setCanceledOnTouchOutside(true)
@@ -52,22 +55,54 @@ class CustomDialog(context: Context) : View.OnClickListener{
         val list = dialog.findViewById<TextView>(R.id.dialog_Todo) // 할일
         val user = dialog.findViewById<TextView>(R.id.dialog_userName) // 등록자
         val todoContext = dialog.findViewById<EditText>(R.id.dialog_context) // 내용
+        val btnMode = dialog.findViewById<Button>(R.id.dialog_ok)
 
-        db.collection("User")
-            .document(userID)
-            .get()
-            .addOnSuccessListener {
-                user.text = "${it["name"]}"
-            }.addOnFailureListener {
+        if(todo.add){
 
+            dialog.dialog_img.setOnClickListener {
+                // 안눌려 있으면
+                if(!isOpen){
+                    dialog.floating_cleaning.setOnClickListener(this)
+                    dialog.floating_trash.setOnClickListener(this)
+                    dialog.floating_shopping.setOnClickListener(this)
+                    dialog.floating_pickup.setOnClickListener(this)
+                    dialog.floating_laudnry.setOnClickListener(this)
+                    dialog.floating_etc.setOnClickListener(this)
+                    dialog.floating_cooking.setOnClickListener(this)
+                    dialog.floating_clothes.setOnClickListener(this)
+                    dialog.floating_dishes.setOnClickListener(this)
+                    floatingOpen() // 플로팅 메뉴 열어줌
+                    isOpen = true
+                    //각 플로팅 버튼 클릭시 이벤트 구현해야함 ;;
+
+                }else{ // 눌려져 있으면
+                    dialog.floating_cleaning.setOnClickListener(this)
+                    dialog.floating_trash.setOnClickListener(this)
+                    dialog.floating_shopping.setOnClickListener(this)
+                    dialog.floating_pickup.setOnClickListener(this)
+                    dialog.floating_laudnry.setOnClickListener(this)
+                    dialog.floating_etc.setOnClickListener(this)
+                    dialog.floating_cooking.setOnClickListener(this)
+                    dialog.floating_clothes.setOnClickListener(this)
+                    dialog.floating_dishes.setOnClickListener(this)
+
+                    floatingClose() // 플로팅 메뉴 닫아줌
+                    isOpen=false
+                }
             }
 
-        dialog.dialog_cancle.setOnClickListener { // 취소버튼
-            dialog.dismiss()
-        }
+            Log.d("다이얼로그","추가모드")
+            db.collection("User")
+                .document(userID)
+                .get()
+                .addOnSuccessListener {
+                    user.text = "${it["name"]}"
+                }.addOnFailureListener {
 
-        dialog.dialog_ok.setOnClickListener {  // 완료/추가mode별로 구분 해야함
-            //추가모드
+                }
+
+            dialog.dialog_ok.setOnClickListener {  // 완료/추가mode별로 구분 해야함
+                //추가모드
                 db.collection("User")
                     .document(userID)
                     .get()
@@ -75,44 +110,50 @@ class CustomDialog(context: Context) : View.OnClickListener{
                         // rdb에 날짜별로 넣어줌
                         Log.d("방코드",roomCode)
                         Log.d("유저 아이디",userID)
-                        rdb.child(roomCode).child(date.toString()).child(list.text.toString()).child("등록자").setValue(user.text.toString())
-                        rdb.child(roomCode).child(date.toString()).child(list.text.toString()).child("내용").setValue(todoContext.text.toString())
+                        val map = mapOf(
+                            "등록자" to user.text.toString(),
+                            "내용" to todoContext.text.toString()
+                        )
+                        rdb.child(roomCode).child(date.toString()).child(list.text.toString()).setValue(map)
 
                         onClickListener.onClicked(user.text.toString(),list.text.toString(),todoContext.text.toString())
                         dialog.dismiss()
                     }
+            }
+        }else{
+            // 완료 모드
+            Log.d("다이얼로그","완료모드")
+            list.text = todo.title
+            user.text = todo.userName
+            todoContext.setText(todo.todoContext)
+            todoContext.isClickable = false
+            todoContext.isFocusable = false
+            dialog.dialog_ok.text = "완료"
+
+            when(todo.title){ //타이틀 별로 이미지 바꿔줘야함
+                "청소" -> {dialog.dialog_img.setImageResource(R.drawable.cleaning)}
+                "빨래널기&개기" -> {dialog.dialog_img.setImageResource(R.drawable.clothespin)}
+                "요리" -> {dialog.dialog_img.setImageResource(R.drawable.cooking)}
+                "설거지" -> {dialog.dialog_img.setImageResource(R.drawable.apron)}
+                "기타" -> {dialog.dialog_img.setImageResource(R.drawable.etc)}
+                "빨래" -> {dialog.dialog_img.setImageResource(R.drawable.laundry)}
+                "픽업" -> {dialog.dialog_img.setImageResource(R.drawable.pickup)}
+                "장보기" -> {dialog.dialog_img.setImageResource(R.drawable.shopping)}
+                "쓰레기" -> {dialog.dialog_img.setImageResource(R.drawable.recycle)}
+            }
+
+            dialog.dialog_img.isClickable = false
+            dialog.dialog_img.isFocusable = false
+
+            dialog.dialog_ok.setOnClickListener{
+                rdb.child(roomCode).child(date.toString()).child(todo.title).removeValue()
+                dialog.dismiss()
+            }
+
         }
 
-        dialog.dialog_img.setOnClickListener {
-            // 안눌려 있으면
-            if(!isOpen){
-                dialog.floating_cleaning.setOnClickListener(this)
-                dialog.floating_trash.setOnClickListener(this)
-                dialog.floating_shopping.setOnClickListener(this)
-                dialog.floating_pickup.setOnClickListener(this)
-                dialog.floating_laudnry.setOnClickListener(this)
-                dialog.floating_etc.setOnClickListener(this)
-                dialog.floating_cooking.setOnClickListener(this)
-                dialog.floating_clothes.setOnClickListener(this)
-                dialog.floating_dishes.setOnClickListener(this)
-                floatingOpen() // 플로팅 메뉴 열어줌
-                isOpen = true
-                //각 플로팅 버튼 클릭시 이벤트 구현해야함 ;;
-
-            }else{ // 눌려져 있으면
-                dialog.floating_cleaning.setOnClickListener(this)
-                dialog.floating_trash.setOnClickListener(this)
-                dialog.floating_shopping.setOnClickListener(this)
-                dialog.floating_pickup.setOnClickListener(this)
-                dialog.floating_laudnry.setOnClickListener(this)
-                dialog.floating_etc.setOnClickListener(this)
-                dialog.floating_cooking.setOnClickListener(this)
-                dialog.floating_clothes.setOnClickListener(this)
-                dialog.floating_dishes.setOnClickListener(this)
-
-                floatingClose() // 플로팅 메뉴 닫아줌
-                isOpen=false
-            }
+        dialog.dialog_cancle.setOnClickListener { // 취소버튼
+            dialog.dismiss()
         }
     }
 

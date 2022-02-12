@@ -41,6 +41,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         addItem.add(Todo("추가하기","처음꺼","처음꺼",true))
+        initRecyclerTodo(this)
+
 
         auth = FirebaseAuth.getInstance()
 
@@ -65,8 +67,8 @@ class MainActivity : AppCompatActivity() {
                     "아들" -> { main_userImg.setImageResource(R.drawable.green_son) }
                     "딸" -> { main_userImg.setImageResource(R.drawable.green_daughter) }
                 }
-                rdb.getReference(code).child((date.toString())).addChildEventListener(object : ChildEventListener{
-
+                val roomDB = rdb.getReference(code).child((date.toString()))
+                roomDB.addChildEventListener(object : ChildEventListener{
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                         Log.d("알디비", "데이터 추가됨 $snapshot")
                         val todo = snapshot.key
@@ -74,10 +76,20 @@ class MainActivity : AppCompatActivity() {
                         val context = map["내용"].toString()
                         val name = map["등록자"].toString()
                         addItem.add(Todo(todo!!,name,context,false))
+                        Log.d("알디비",addItem.toString())
                         initRecyclerTodo(this@MainActivity)
                     }
                     override fun onChildRemoved(snapshot: DataSnapshot) {
                         Log.d("알디비","데이터 제거됨 $snapshot")
+                        val key = snapshot.key
+                        val map = snapshot.value as Map<*,*>
+                        val context = map["내용"].toString()
+                        val name = map["등록자"].toString()
+
+                        val todo = Todo(key!!,name,context,false)
+                        addItem.remove(todo)
+
+                        initRecyclerTodo(this@MainActivity)
                     }
 
                     override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -106,38 +118,6 @@ class MainActivity : AppCompatActivity() {
         val noticeAdapter = RecyclerNoticeAdapter(noticeList)
         Recycler_noticeList.adapter = noticeAdapter
 
-//       Handler().postDelayed({
-//           // db에서 코드번호 받아오는데 걸리는 지연시간 생각
-//           if(code!=""){ //코드 받아오면
-//               rdb.getReference(code).child((date.toString())).addChildEventListener(object : ChildEventListener{
-//
-//                   override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-//                       Log.d("알디비", "데이터 추가됨 $snapshot")
-//                       val todo = snapshot.key
-//                       val map = snapshot.value as Map<*,*>
-//                       val context = map["내용"].toString()
-//                       val name = map["등록자"].toString()
-//                       addItem.add(Todo(todo!!,name,context,false))
-//                       initRecyclerTodo(this@MainActivity)
-//                   }
-//                   override fun onChildRemoved(snapshot: DataSnapshot) {
-//                       Log.d("알디비","데이터 제거됨 $snapshot")
-//                   }
-//
-//                   override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-//                       Log.d("알디비","데이터 수정됨")
-//                   }
-//                   override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-//                       Log.d("알디비","데이터 순서 바뀜")
-//                   }
-//                   override fun onCancelled(error: DatabaseError) {
-//                       TODO("Not yet implemented")
-//                   }
-//               })
-//           }
-//       },500L)
-
-
 /*        out.setOnClickListener {
             var data = mutableMapOf<String,Any>()
             data["room"] = "not yet"
@@ -163,9 +143,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun getCode(code : String): String {
-        val returnCode = code
-        return returnCode
+    private fun addItem(item : Todo){
+        Log.d("아이템추가","호출됨")
+        addItem.add(item)
     }
 
     private fun initRecyclerTodo(context : Context) {
@@ -179,30 +159,19 @@ class MainActivity : AppCompatActivity() {
             override fun onItemClick(v: View, data: Todo, pos: Int) {
                 Log.d("아이템","클릭됨")
                 val dialog = CustomDialog(context)
-                if(!data.add){
-                    // 완료모드
+                val userID = auth?.currentUser?.uid.toString()
+                db.collection("User")
+                    .document(userID)
+                    .get()
+                    .addOnSuccessListener {
+                        dialog.showDialog(userID,it["room"].toString(),data)
+                    }
 
-                }else{
-                    // 추가모드
-                    // 다이어로그에서 넘어온 데이터로 rdb 추가
+                dialog.setOnClickListener(object :  CustomDialog.OnDialogClickListener {
+                    override fun onClicked(user: String, todo: String, todoContext: String) {
 
-                        val userID = auth?.currentUser?.uid.toString()
-                    db.collection("User")
-                        .document(userID)
-                        .get()
-                        .addOnSuccessListener {
-                            dialog.showDialog(userID,it["room"].toString())
-                        }
-
-                    dialog.setOnClickListener(object :  CustomDialog.OnDialogClickListener {
-                        override fun onClicked(user: String, todo: String, todoContext: String) {
-                            //다이얼로그에서 데이터 넘겨줌
-                            addItem.apply{
-                                add(Todo(todo,user,todoContext,false))
-                            }
-                        }
-                    })
-                }
+                    }
+                })
             }
         })
     }
