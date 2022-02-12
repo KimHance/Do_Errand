@@ -41,6 +41,19 @@ class RecyclerTodoAdapter( private val context: Context) : RecyclerView.Adapter<
 
         fun bind(item: Todo){
             view.todoTitle.text = item.title
+
+            when(view.todoTitle.text){ //타이틀 별로 이미지 바꿔줘야함
+                "청소" -> {view.todoImg.setImageResource(R.drawable.cleaning)}
+                "빨래널기&개기" -> {view.todoImg.setImageResource(R.drawable.clothespin)}
+                "요리" -> {view.todoImg.setImageResource(R.drawable.cooking)}
+                "설거지" -> {view.todoImg.setImageResource(R.drawable.apron)}
+                "기타" -> {view.todoImg.setImageResource(R.drawable.etc)}
+                "빨래" -> {view.todoImg.setImageResource(R.drawable.laundry)}
+                "픽업" -> {view.todoImg.setImageResource(R.drawable.pickup)}
+                "장보기" -> {view.todoImg.setImageResource(R.drawable.shopping)}
+                "쓰레기" -> {view.todoImg.setImageResource(R.drawable.recycle)}
+            }
+
             val pos = adapterPosition
             if(pos!=RecyclerView.NO_POSITION){
                 view.findViewById<CardView>(R.id.item_card).setOnClickListener {

@@ -9,17 +9,14 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.dialog_todo.*
 import java.time.LocalDate
 
@@ -40,7 +37,7 @@ class CustomDialog(context: Context) : View.OnClickListener{
         onClickListener = listener
     }
 
-    fun showDialog(id : String ,code : String){
+    fun showDialog(id : String ,code : String){ //어댑터에서 추가,완료 모드인지 param 으로 받아와야함
         dialog.setContentView(R.layout.dialog_todo)
         dialog.window!!.setLayout(WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT)
         dialog.setCanceledOnTouchOutside(true)
@@ -69,23 +66,22 @@ class CustomDialog(context: Context) : View.OnClickListener{
             dialog.dismiss()
         }
 
-        dialog.dialog_ok.setOnClickListener {  // 완료/추가 버튼
+        dialog.dialog_ok.setOnClickListener {  // 완료/추가mode별로 구분 해야함
+            //추가모드
                 db.collection("User")
                     .document(userID)
                     .get()
                     .addOnSuccessListener {
+                        // rdb에 날짜별로 넣어줌
                         Log.d("방코드",roomCode)
                         Log.d("유저 아이디",userID)
                         rdb.child(roomCode).child(date.toString()).child(list.text.toString()).child("등록자").setValue(user.text.toString())
                         rdb.child(roomCode).child(date.toString()).child(list.text.toString()).child("내용").setValue(todoContext.text.toString())
+
                         onClickListener.onClicked(user.text.toString(),list.text.toString(),todoContext.text.toString())
                         dialog.dismiss()
                     }
-//            onClickListener.onClicked(user.text.toString(),list.text.toString(),todoContext.text.toString())
-//            dialog.dismiss()
         }
-
-
 
         dialog.dialog_img.setOnClickListener {
             // 안눌려 있으면
@@ -118,7 +114,6 @@ class CustomDialog(context: Context) : View.OnClickListener{
                 isOpen=false
             }
         }
-
     }
 
     override fun onClick(v: View?) {
@@ -179,6 +174,8 @@ class CustomDialog(context: Context) : View.OnClickListener{
             }
         }
     }
+
+    // 플로팅 메뉴 열기
     private fun floatingOpen(){ //눌려져 있으면
         val fabOpen = AnimationUtils.loadAnimation(dialog.context,R.anim.fab_open)
         val fabRAntiClockwise = AnimationUtils.loadAnimation(dialog.context,R.anim.rotate_anticlockwise)
@@ -215,8 +212,10 @@ class CustomDialog(context: Context) : View.OnClickListener{
         dialog.floating_pickup.isClickable=true
         dialog.floating_shopping.isClickable=true
         dialog.floating_trash.isClickable=true
+
     }
 
+    // 플로팅 메뉴 닫기
     private fun floatingClose(){
         val fabClose = AnimationUtils.loadAnimation(dialog.context,R.anim.fab_close)
         val fabRClockwise = AnimationUtils.loadAnimation(dialog.context,R.anim.rotate_clockwise)
