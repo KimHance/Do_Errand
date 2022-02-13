@@ -121,15 +121,20 @@ class CustomDialog(context: Context) : View.OnClickListener{
                             "등록자" to user.text.toString(),
                             "내용" to todoContext.text.toString()
                         )
-                        rdb.child(roomCode).child(date.toString()).child(list.text.toString()).get()
+                        rdb.child(roomCode).child(date.toString()).child(list.text.toString())
+                            .get()
                             .addOnSuccessListener { //이미 등록된 똑같은 작업이 있으면
-                                val beforeContext = it.child("내용").value.toString() // 원래 DB에 있던 내용
-                                rdb.child(roomCode).child(date.toString()).child(list.text.toString()).removeValue() // 먼저 삭제하고 -> main 에서 list값 제거하기 위해
-                                map["내용"] = "$beforeContext \n--------------\n+ 추가(${map["등록자"]})\n ${map["내용"]}"
-                                rdb.child(roomCode).child(date.toString()).child(list.text.toString()).setValue(map) // 다음에 추가 -> main의 list에서 중복 방지위해
-                        }.addOnFailureListener { // 없으면
-                                rdb.child(roomCode).child(date.toString()).child(list.text.toString()).setValue(map)
-                        }
+                                if (it.exists()){
+                                    val beforeContext = it.child("내용").value.toString() // 원래 DB에 있던 내용
+                                    rdb.child(roomCode).child(date.toString()).child(list.text.toString()).removeValue() // 먼저 삭제하고 -> main 에서 list값 제거하기 위해
+                                    map["내용"] = "$beforeContext \n--------------\n+ 추가(${map["등록자"]})\n ${map["내용"]}"
+                                    rdb.child(roomCode).child(date.toString()).child(list.text.toString()).setValue(map) // 다음에 추가 -> main의 list에서 중복 방지위해
+                                }else{
+                                    rdb.child(roomCode).child(date.toString()).child(list.text.toString()).setValue(map)
+                                }
+                            }.addOnFailureListener { // 없으면
+
+                            }
 
                         //main으로 넘겨줌
                         onClickListener.onClicked(doCount.toString(),addCount.toString())
