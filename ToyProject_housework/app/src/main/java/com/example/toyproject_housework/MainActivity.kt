@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
+import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
@@ -17,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.time.LocalDate
 import java.util.HashMap
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private var auth : FirebaseAuth? = null
     private var db = FirebaseFirestore.getInstance()
@@ -27,13 +29,13 @@ class MainActivity : AppCompatActivity() {
     var name : String = ""
     var role : String = ""
 
+    var menuOpen = false
+
     @RequiresApi(Build.VERSION_CODES.O)
     var date : LocalDate = LocalDate.now()
 
     lateinit var todoAdapter: RecyclerTodoAdapter
-
     private val addItem = mutableListOf<Todo>()
-
     lateinit var id : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,9 +60,10 @@ class MainActivity : AppCompatActivity() {
                 name = it["name"].toString()
                 role = it["role"].toString()
 
-                Log.d("룸","순서좀 보자")
-
+                main_userAdd.text = "등록수 : ${it["add"].toString()}"
+                main_userDo.text = "완료수 : ${it["do"].toString()}"
                 main_name.text = "${name}님"
+
                 when(role){
                     "아빠" -> { main_userImg.setImageResource(R.drawable.green_dad) }
                     "엄마" -> { main_userImg.setImageResource(R.drawable.green_mom) }
@@ -91,7 +94,6 @@ class MainActivity : AppCompatActivity() {
 
                         initRecyclerTodo(this@MainActivity)
                     }
-
                     override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                         Log.d("알디비","데이터 수정됨")
                     }
@@ -117,7 +119,6 @@ class MainActivity : AppCompatActivity() {
 
         val noticeAdapter = RecyclerNoticeAdapter(noticeList)
         Recycler_noticeList.adapter = noticeAdapter
-
 /*        out.setOnClickListener {
             var data = mutableMapOf<String,Any>()
             data["room"] = "not yet"
@@ -139,13 +140,20 @@ class MainActivity : AppCompatActivity() {
                 }
         }*/
 
+        main_family.setOnClickListener(this)
+        main_invite.setOnClickListener(this)
+        main_notice.setOnClickListener(this)
 
+        main_menu.setOnClickListener{
+            if(menuOpen){
+                closeMenu()
+                menuOpen = false
+            }else{
+                openMenu()
+                menuOpen = true
+            }
+        }
 
-    }
-
-    private fun addItem(item : Todo){
-        Log.d("아이템추가","호출됨")
-        addItem.add(item)
     }
 
     private fun initRecyclerTodo(context : Context) {
@@ -160,6 +168,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("아이템","클릭됨")
                 val dialog = CustomDialog(context)
                 val userID = auth?.currentUser?.uid.toString()
+
                 db.collection("User")
                     .document(userID)
                     .get()
@@ -168,11 +177,69 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 dialog.setOnClickListener(object :  CustomDialog.OnDialogClickListener {
-                    override fun onClicked(user: String, todo: String, todoContext: String) {
-
+                    override fun onClicked(userDo: String, userAdd: String) {
+                        main_userDo.text = "완료수 : $userDo"
+                        main_userAdd.text = "등록수 : $userAdd"
                     }
+
                 })
             }
         })
     }
+
+    private fun openMenu(){ //메뉴 열기
+        val fabOpen = AnimationUtils.loadAnimation(this,R.anim.fab_open)
+        main_family.isVisible = true
+        main_invite.isVisible = true
+        main_notice.isVisible = true
+        text_family.isVisible = true
+        text_invite.isVisible = true
+        text_notice.isVisible = true
+
+        main_family.startAnimation(fabOpen)
+        main_invite.startAnimation(fabOpen)
+        main_notice.startAnimation(fabOpen)
+        text_family.startAnimation(fabOpen)
+        text_invite.startAnimation(fabOpen)
+        text_notice.startAnimation(fabOpen)
+
+        main_family.isClickable = true
+        main_invite.isClickable = true
+        main_notice.isClickable = true
+
+    }
+
+    private fun closeMenu(){ //메뉴 닫기
+        val fabClose = AnimationUtils.loadAnimation(this,R.anim.fab_close)
+
+        main_family.startAnimation(fabClose)
+        main_invite.startAnimation(fabClose)
+        main_notice.startAnimation(fabClose)
+        text_family.startAnimation(fabClose)
+        text_invite.startAnimation(fabClose)
+        text_notice.startAnimation(fabClose)
+
+        main_family.isClickable = false
+        main_invite.isClickable = false
+        main_notice.isClickable = false
+
+    }
+
+    override fun onClick(v: View) {
+        when(v.id){
+            this.main_invite.id -> {
+                closeMenu()
+                menuOpen = false
+            }
+            this.main_family.id -> {
+                closeMenu()
+                menuOpen = false
+            }
+            this.main_notice.id -> {
+                closeMenu()
+                menuOpen = false
+            }
+        }
+    }
+
 }

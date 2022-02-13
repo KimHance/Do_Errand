@@ -17,6 +17,7 @@ import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.dialog_todo.*
 import kotlinx.android.synthetic.main.item_list_todo.view.*
@@ -35,6 +36,8 @@ class CustomDialog(context: Context) : View.OnClickListener{
     private val dialog = Dialog(context)
     private lateinit var onClickListener : OnDialogClickListener
 
+   private var addCount : Int = 0
+   private var doCount : Int = 0
 
     fun setOnClickListener(listener : OnDialogClickListener){
         onClickListener = listener
@@ -48,6 +51,16 @@ class CustomDialog(context: Context) : View.OnClickListener{
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 모서리 삐죽 티어나온거 수정
         dialog.show()
 
+        dialog.floating_cleaning.setOnClickListener(this)
+        dialog.floating_trash.setOnClickListener(this)
+        dialog.floating_shopping.setOnClickListener(this)
+        dialog.floating_pickup.setOnClickListener(this)
+        dialog.floating_laudnry.setOnClickListener(this)
+        dialog.floating_etc.setOnClickListener(this)
+        dialog.floating_cooking.setOnClickListener(this)
+        dialog.floating_clothes.setOnClickListener(this)
+        dialog.floating_dishes.setOnClickListener(this)
+
         val userID = id
         val roomCode = code
 
@@ -55,54 +68,66 @@ class CustomDialog(context: Context) : View.OnClickListener{
         val list = dialog.findViewById<TextView>(R.id.dialog_Todo) // 할일
         val user = dialog.findViewById<TextView>(R.id.dialog_userName) // 등록자
         val todoContext = dialog.findViewById<EditText>(R.id.dialog_context) // 내용
-        val btnMode = dialog.findViewById<Button>(R.id.dialog_ok)
+
+
+        db.collection("User")
+            .document(userID)
+            .get()
+            .addOnSuccessListener {
+                user.text = "${it["name"]}"
+                addCount = it["add"].toString().toInt() // 유저의 add 필드 받아서 초기화
+                doCount = it["do"].toString().toInt() // 유저의 do 필드 받아서 초기화
+            }.addOnFailureListener {
+
+            }
 
         if(todo.add){
-
+            // 추가 모드
             dialog.dialog_img.setOnClickListener {
                 // 안눌려 있으면
                 if(!isOpen){
-                    dialog.floating_cleaning.setOnClickListener(this)
-                    dialog.floating_trash.setOnClickListener(this)
-                    dialog.floating_shopping.setOnClickListener(this)
-                    dialog.floating_pickup.setOnClickListener(this)
-                    dialog.floating_laudnry.setOnClickListener(this)
-                    dialog.floating_etc.setOnClickListener(this)
-                    dialog.floating_cooking.setOnClickListener(this)
-                    dialog.floating_clothes.setOnClickListener(this)
-                    dialog.floating_dishes.setOnClickListener(this)
+//                    dialog.floating_cleaning.setOnClickListener(this)
+//                    dialog.floating_trash.setOnClickListener(this)
+//                    dialog.floating_shopping.setOnClickListener(this)
+//                    dialog.floating_pickup.setOnClickListener(this)
+//                    dialog.floating_laudnry.setOnClickListener(this)
+//                    dialog.floating_etc.setOnClickListener(this)
+//                    dialog.floating_cooking.setOnClickListener(this)
+//                    dialog.floating_clothes.setOnClickListener(this)
+//                    dialog.floating_dishes.setOnClickListener(this)
                     floatingOpen() // 플로팅 메뉴 열어줌
                     isOpen = true
                     //각 플로팅 버튼 클릭시 이벤트 구현해야함 ;;
 
                 }else{ // 눌려져 있으면
-                    dialog.floating_cleaning.setOnClickListener(this)
-                    dialog.floating_trash.setOnClickListener(this)
-                    dialog.floating_shopping.setOnClickListener(this)
-                    dialog.floating_pickup.setOnClickListener(this)
-                    dialog.floating_laudnry.setOnClickListener(this)
-                    dialog.floating_etc.setOnClickListener(this)
-                    dialog.floating_cooking.setOnClickListener(this)
-                    dialog.floating_clothes.setOnClickListener(this)
-                    dialog.floating_dishes.setOnClickListener(this)
-
+//                    dialog.floating_cleaning.setOnClickListener(this)
+//                    dialog.floating_trash.setOnClickListener(this)
+//                    dialog.floating_shopping.setOnClickListener(this)
+//                    dialog.floating_pickup.setOnClickListener(this)
+//                    dialog.floating_laudnry.setOnClickListener(this)
+//                    dialog.floating_etc.setOnClickListener(this)
+//                    dialog.floating_cooking.setOnClickListener(this)
+//                    dialog.floating_clothes.setOnClickListener(this)
+//                    dialog.floating_dishes.setOnClickListener(this)
                     floatingClose() // 플로팅 메뉴 닫아줌
                     isOpen=false
                 }
             }
 
             Log.d("다이얼로그","추가모드")
-            db.collection("User")
-                .document(userID)
-                .get()
-                .addOnSuccessListener {
-                    user.text = "${it["name"]}"
-                }.addOnFailureListener {
 
-                }
 
-            dialog.dialog_ok.setOnClickListener {  // 완료/추가mode별로 구분 해야함
-                //추가모드
+            dialog.dialog_ok.setOnClickListener {
+                addCount += 1
+                var addData = hashMapOf(
+                    "add" to addCount
+                )
+
+                // DB 유저 add 필드 +1
+                db.collection("User")
+                    .document(userID)
+                    .set(addData, SetOptions.merge())
+
                 db.collection("User")
                     .document(userID)
                     .get()
@@ -116,12 +141,16 @@ class CustomDialog(context: Context) : View.OnClickListener{
                         )
                         rdb.child(roomCode).child(date.toString()).child(list.text.toString()).setValue(map)
 
-                        onClickListener.onClicked(user.text.toString(),list.text.toString(),todoContext.text.toString())
+                        //main으로 넘겨줌
+                        onClickListener.onClicked(doCount.toString(),addCount.toString())
+
                         dialog.dismiss()
                     }
             }
         }else{
             // 완료 모드
+
+            doCount += 1
             Log.d("다이얼로그","완료모드")
             list.text = todo.title
             user.text = todo.userName
@@ -146,8 +175,19 @@ class CustomDialog(context: Context) : View.OnClickListener{
             dialog.dialog_img.isFocusable = false
 
             dialog.dialog_ok.setOnClickListener{
+                doCount += 1
+                var doData = hashMapOf(
+                    "do" to doCount
+                )
+                // DB 유저 do 필드 +1
+                db.collection("User")
+                    .document(userID)
+                    .set(doData,SetOptions.merge())
                 rdb.child(roomCode).child(date.toString()).child(todo.title).removeValue()
                 dialog.dismiss()
+
+                // main으로 넘겨줌
+                onClickListener.onClicked(doCount.toString(),addCount.toString())
             }
 
         }
@@ -288,7 +328,7 @@ class CustomDialog(context: Context) : View.OnClickListener{
     }
 
     interface OnDialogClickListener{
-        fun onClicked(user : String , todo : String, todoContext: String)
+        fun onClicked(userDo : String, userAdd : String)
     }
 
 }
