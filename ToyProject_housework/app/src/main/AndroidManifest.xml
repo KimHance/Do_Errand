@@ -19,10 +19,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity"/>
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".RoomActivity"/>
-        <activity android:name=".MakeRoomActivity"/>
         <activity android:name=".EnterRoomActivity"/>
     </application>
 
