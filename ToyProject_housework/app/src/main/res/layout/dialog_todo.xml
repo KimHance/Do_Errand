@@ -175,8 +175,9 @@
                 android:ems="10"
                 android:gravity="top|left"
                 android:hint="상세 내용"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:textSize="14sp"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

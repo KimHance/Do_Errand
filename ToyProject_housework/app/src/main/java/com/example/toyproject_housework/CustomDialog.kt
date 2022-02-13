@@ -74,49 +74,31 @@ class CustomDialog(context: Context) : View.OnClickListener{
             .document(userID)
             .get()
             .addOnSuccessListener {
-                user.text = "${it["name"]}"
                 addCount = it["add"].toString().toInt() // 유저의 add 필드 받아서 초기화
                 doCount = it["do"].toString().toInt() // 유저의 do 필드 받아서 초기화
-            }.addOnFailureListener {
-
-            }
+            }.addOnFailureListener {}
 
         if(todo.add){
             // 추가 모드
+
+            db.collection("User")
+                .document(userID)
+                .get()
+                .addOnSuccessListener {
+                    user.text = "${it["name"]}"
+                }.addOnFailureListener {}
+
             dialog.dialog_img.setOnClickListener {
                 // 안눌려 있으면
                 if(!isOpen){
-//                    dialog.floating_cleaning.setOnClickListener(this)
-//                    dialog.floating_trash.setOnClickListener(this)
-//                    dialog.floating_shopping.setOnClickListener(this)
-//                    dialog.floating_pickup.setOnClickListener(this)
-//                    dialog.floating_laudnry.setOnClickListener(this)
-//                    dialog.floating_etc.setOnClickListener(this)
-//                    dialog.floating_cooking.setOnClickListener(this)
-//                    dialog.floating_clothes.setOnClickListener(this)
-//                    dialog.floating_dishes.setOnClickListener(this)
                     floatingOpen() // 플로팅 메뉴 열어줌
                     isOpen = true
-                    //각 플로팅 버튼 클릭시 이벤트 구현해야함 ;;
-
                 }else{ // 눌려져 있으면
-//                    dialog.floating_cleaning.setOnClickListener(this)
-//                    dialog.floating_trash.setOnClickListener(this)
-//                    dialog.floating_shopping.setOnClickListener(this)
-//                    dialog.floating_pickup.setOnClickListener(this)
-//                    dialog.floating_laudnry.setOnClickListener(this)
-//                    dialog.floating_etc.setOnClickListener(this)
-//                    dialog.floating_cooking.setOnClickListener(this)
-//                    dialog.floating_clothes.setOnClickListener(this)
-//                    dialog.floating_dishes.setOnClickListener(this)
                     floatingClose() // 플로팅 메뉴 닫아줌
                     isOpen=false
                 }
             }
-
             Log.d("다이얼로그","추가모드")
-
-
             dialog.dialog_ok.setOnClickListener {
                 addCount += 1
                 var addData = hashMapOf(
@@ -135,11 +117,19 @@ class CustomDialog(context: Context) : View.OnClickListener{
                         // rdb에 날짜별로 넣어줌
                         Log.d("방코드",roomCode)
                         Log.d("유저 아이디",userID)
-                        val map = mapOf(
+                        val map = mutableMapOf(
                             "등록자" to user.text.toString(),
                             "내용" to todoContext.text.toString()
                         )
-                        rdb.child(roomCode).child(date.toString()).child(list.text.toString()).setValue(map)
+                        rdb.child(roomCode).child(date.toString()).child(list.text.toString()).get()
+                            .addOnSuccessListener { //이미 등록된 똑같은 작업이 있으면
+                                val beforeContext = it.child("내용").value.toString() // 원래 DB에 있던 내용
+                                rdb.child(roomCode).child(date.toString()).child(list.text.toString()).removeValue() // 먼저 삭제하고 -> main 에서 list값 제거하기 위해
+                                map["내용"] = "$beforeContext \n--------------\n+ 추가(${map["등록자"]})\n ${map["내용"]}"
+                                rdb.child(roomCode).child(date.toString()).child(list.text.toString()).setValue(map) // 다음에 추가 -> main의 list에서 중복 방지위해
+                        }.addOnFailureListener { // 없으면
+                                rdb.child(roomCode).child(date.toString()).child(list.text.toString()).setValue(map)
+                        }
 
                         //main으로 넘겨줌
                         onClickListener.onClicked(doCount.toString(),addCount.toString())

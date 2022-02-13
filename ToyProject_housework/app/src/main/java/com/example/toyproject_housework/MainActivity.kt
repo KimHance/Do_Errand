@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 roomDB.addChildEventListener(object : ChildEventListener{
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                         Log.d("알디비", "데이터 추가됨 $snapshot")
+
                         val todo = snapshot.key
                         val map = snapshot.value as Map<*,*>
                         val context = map["내용"].toString()
