@@ -1,6 +1,7 @@
 package com.example.toyproject_housework
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -229,6 +230,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when(v.id){
             this.main_invite.id -> {
+                var intent = Intent(this,InviteActivity::class.java)
+                intent.putExtra("roomCode",code)
+                startActivity(intent)
                 closeMenu()
                 menuOpen = false
             }

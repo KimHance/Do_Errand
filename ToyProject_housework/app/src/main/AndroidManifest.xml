@@ -25,6 +25,7 @@
             android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".RoomActivity"/>
         <activity android:name=".EnterRoomActivity"/>
+        <activity android:name=".InviteActivity"/>
     </application>
 
 </manifest>
