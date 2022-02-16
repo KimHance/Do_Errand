@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ToyProject_housework</string>
+    <string name="msg_token_fmt" translatable="true"></string>
 </resources>
