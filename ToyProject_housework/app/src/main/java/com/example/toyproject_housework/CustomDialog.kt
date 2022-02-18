@@ -9,23 +9,23 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.dialog_todo.*
-import kotlinx.android.synthetic.main.item_list_todo.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.Exception
 import java.time.LocalDate
 
 class CustomDialog(context: Context) : View.OnClickListener{
 
-    private var auth : FirebaseAuth? = null
     var db = FirebaseFirestore.getInstance()
     var rdb = Firebase.database.reference
 
@@ -136,6 +136,15 @@ class CustomDialog(context: Context) : View.OnClickListener{
 
                             }
 
+                        rdb.child(roomCode).child("userToken").get().addOnSuccessListener {
+                            for(tk in it.children){
+                                val data = NotificationBody.NotificationData("집안일 해놔","새로운 집안일이 등록되었습니다.")
+                                val body = NotificationBody(tk.value.toString(), data)
+                                sendNotification(body)
+                            }
+                        }
+
+
                         //main으로 넘겨줌
                         onClickListener.onClicked(doCount.toString(),addCount.toString())
 
@@ -170,15 +179,32 @@ class CustomDialog(context: Context) : View.OnClickListener{
             dialog.dialog_img.isFocusable = false
 
             dialog.dialog_ok.setOnClickListener{
+
                 doCount += 1
                 var doData = hashMapOf(
                     "do" to doCount
                 )
+                var name = ""
+                db.collection("User")
+                    .document(userID)
+                    .get()
+                    .addOnSuccessListener {
+                        name = it["name"].toString()
+                    }
                 // DB 유저 do 필드 +1
                 db.collection("User")
                     .document(userID)
                     .set(doData,SetOptions.merge())
                 rdb.child(roomCode).child(date.toString()).child(todo.title).removeValue()
+
+                rdb.child(roomCode).child("userToken").get().addOnSuccessListener {
+                    for(tk in it.children){
+                        val data = NotificationBody.NotificationData("집안일 해놔","$name 님이 ${todo.title}을(를) 완료했습니다.")
+                        val body = NotificationBody(tk.value.toString(), data)
+                        sendNotification(body)
+                    }
+                }
+
                 dialog.dismiss()
 
                 // main으로 넘겨줌
@@ -324,6 +350,16 @@ class CustomDialog(context: Context) : View.OnClickListener{
 
     interface OnDialogClickListener{
         fun onClicked(userDo : String, userAdd : String)
+    }
+
+    private fun sendNotification(notification : NotificationBody){
+        CoroutineScope(Dispatchers.IO).launch {
+            try{
+                RetrofitInstance.api.sendNotification(notification)
+            }catch ( e: Exception){
+                Log.e("알림", e.toString())
+            }
+        }
     }
 
 }

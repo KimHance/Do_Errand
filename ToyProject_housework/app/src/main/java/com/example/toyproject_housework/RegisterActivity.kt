@@ -1,15 +1,19 @@
 package com.example.toyproject_housework
 
 import android.os.Bundle
+import android.system.StructMsghdr
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_register.*
 import org.jetbrains.anko.toast
 
@@ -19,6 +23,7 @@ class RegisterActivity : AppCompatActivity(){
     private var auth : FirebaseAuth? = null
     var role = ""
     var db = FirebaseFirestore.getInstance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +67,7 @@ class RegisterActivity : AppCompatActivity(){
         }
     }
     private fun createUser(email: String, passwd: String){
+
             auth?.createUserWithEmailAndPassword(email,passwd)
                 ?.addOnCompleteListener(this) { task ->
                     if(task.isSuccessful){

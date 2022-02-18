@@ -1,13 +1,11 @@
 package com.example.toyproject_housework
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -23,9 +21,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
 import java.time.LocalDate
-import java.util.HashMap
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
+
 
     private var auth : FirebaseAuth? = null
     private var db = FirebaseFirestore.getInstance()
@@ -163,15 +161,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
             }
-
             // Get new FCM registration token
             val token = task.result
+
+            db.collection("User")
+                .document(userIDString)
+                .get()
+                .addOnSuccessListener {
+                    val room = it["room"].toString()
+                    val name = it["name"].toString()
+                    rdb.getReference(room).child("userToken").child(name).setValue(token)
+                }
 
             // Log and toast
             val msg = token
@@ -180,6 +185,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
 
     }
+
+
 
 
 
