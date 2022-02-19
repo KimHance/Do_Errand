@@ -12,6 +12,12 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
+import com.example.toyproject_housework.Adapter.RecyclerNoticeAdapter
+import com.example.toyproject_housework.Adapter.RecyclerTodoAdapter
+import com.example.toyproject_housework.Data.Notice
+import com.example.toyproject_housework.Data.Todo
+import com.example.toyproject_housework.Dialog.NoticeDialog
+import com.example.toyproject_housework.Dialog.TodoDialog
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -40,7 +46,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     var date : LocalDate = LocalDate.now()
 
     lateinit var todoAdapter: RecyclerTodoAdapter
+    lateinit var noticeAdapter : RecyclerNoticeAdapter
     private val addItem = mutableListOf<Todo>()
+    private val noticeItem = mutableListOf<Notice>()
     lateinit var id : String
 
     @SuppressLint("StringFormatInvalid")
@@ -76,6 +84,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     "아들" -> { main_userImg.setImageResource(R.drawable.green_son) }
                     "딸" -> { main_userImg.setImageResource(R.drawable.green_daughter) }
                 }
+
+                // 할일목록
                 val roomDB = rdb.getReference(code).child((date.toString()))
                 roomDB.addChildEventListener(object : ChildEventListener{
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -112,40 +122,50 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 })
 
+                // 공지사항
+                val noticeDB = rdb.getReference(code).child("notice")
+                noticeDB.addChildEventListener(object : ChildEventListener{
+                    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                        val noticeTitle = snapshot.key
+                        val map = snapshot.value as Map<*,*>
+                        val context = map["내용"].toString()
+                        val name = map["등록자"].toString()
+                        noticeItem.add(Notice(noticeTitle.toString(),name,context))
+                    }
+                    override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+                    }
+                    override fun onChildRemoved(snapshot: DataSnapshot) {
+                        val noticeTitle = snapshot.key
+                        val map = snapshot.value as Map<*,*>
+                        val context = map["내용"].toString()
+                        val name = map["등록자"].toString()
+
+                        val notice = Notice(noticeTitle.toString(),name,context)
+                        noticeItem.remove(notice)
+                    }
+                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                        TODO("Not yet implemented")
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+                })
+
             }
             .addOnFailureListener {
                 Log.d("디비","실패")
             }
 
-        val noticeList = ArrayList<Notice>()
-
-        noticeList.add(Notice("나","임시 공지사항"))
-        noticeList.add(Notice("현수","응 임시"))
-        noticeList.add(Notice("접니다","킹현수;; 똑똑 지니어스"))
-        noticeList.add(Notice("저에요","ㅎㅇㅎㅇ 임시"))
-
-        val noticeAdapter = RecyclerNoticeAdapter(noticeList)
-        Recycler_noticeList.adapter = noticeAdapter
-/*        out.setOnClickListener {
-            var data = mutableMapOf<String,Any>()
-            data["room"] = "not yet"
-            db.collection("User")
-                .document(userIDString)
-                .update(data)
-                .addOnSuccessListener {
-                    val updates = hashMapOf<String,Any>(
-                        name to FieldValue.delete()
-                    )
-                    db.collection("Room")
-                        .document(code)
-                        .update(updates)
-                    toast("방 나가기 성공")
-                    finish()
-                }
-                .addOnFailureListener {
-                    toast("방 나가기 실패")
-                }
-        }*/
+//        val noticeList = ArrayList<Notice>()
+//
+//        noticeList.add(Notice("나","임시 공지사항","응"))
+//        noticeList.add(Notice("현수","응 임시","임시"))
+//        noticeList.add(Notice("접니다","킹현수;; 똑똑 지니어스","임시"))
+//        noticeList.add(Notice("저에요","ㅎㅇㅎㅇ 임시","임시"))
+//
+//        val noticeAdapter = RecyclerNoticeAdapter(this)
+//        Recycler_noticeList.adapter = noticeAdapter
 
         main_family.setOnClickListener(this)
         main_invite.setOnClickListener(this)
@@ -187,22 +207,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
+    private fun initRecyclerNotice(context:Context){
+        Log.d("리사이클러","Notice 호출")
+        noticeAdapter = RecyclerNoticeAdapter(this)
+        Recycler_noticeList.adapter = noticeAdapter
+        noticeAdapter.items = noticeItem
 
-
-
-
-
-    private fun initRecyclerTodo(context : Context) {
-        Log.d("리사이클러","이닛 호출")
-        todoAdapter = RecyclerTodoAdapter(this)
-        Recycler_todoList.adapter = todoAdapter
-        todoAdapter.items = addItem
-        Log.d("아이템", "현재 아이템 $addItem")
-
-        todoAdapter.setOnItemClickListener(object : RecyclerTodoAdapter.OnItemClickListener{
-            override fun onItemClick(v: View, data: Todo, pos: Int) {
-                Log.d("아이템","클릭됨")
-                val dialog = CustomDialog(context)
+        noticeAdapter.setOnItemClickListener(object : RecyclerNoticeAdapter.OnItemClickListener{
+            override fun onItemClick(v: View, data: Notice, pos: Int) {
+                val dialog = NoticeDialog(context)
                 val userID = auth?.currentUser?.uid.toString()
 
                 db.collection("User")
@@ -212,7 +225,42 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         dialog.showDialog(userID,it["room"].toString(),data)
                     }
 
-                dialog.setOnClickListener(object :  CustomDialog.OnDialogClickListener {
+                dialog.setOnClickListener(object : NoticeDialog.OnDialogClickListener{
+                    override fun onClicked(editedContext: String) {
+                        data.notice = editedContext
+                        initRecyclerNotice(this@MainActivity)
+                    }
+                })
+            }
+
+        })
+    }
+
+
+
+
+
+    private fun initRecyclerTodo(context : Context) {
+        Log.d("리사이클러","Todo 호출")
+        todoAdapter = RecyclerTodoAdapter(this)
+        Recycler_todoList.adapter = todoAdapter
+        todoAdapter.items = addItem
+        Log.d("아이템", "현재 아이템 $addItem")
+
+        todoAdapter.setOnItemClickListener(object : RecyclerTodoAdapter.OnItemClickListener{
+            override fun onItemClick(v: View, data: Todo, pos: Int) {
+                Log.d("아이템","클릭됨")
+                val dialog = TodoDialog(context)
+                val userID = auth?.currentUser?.uid.toString()
+
+                db.collection("User")
+                    .document(userID)
+                    .get()
+                    .addOnSuccessListener {
+                        dialog.showDialog(userID,it["room"].toString(),data)
+                    }
+
+                dialog.setOnClickListener(object :  TodoDialog.OnDialogClickListener {
                     override fun onClicked(userDo: String, userAdd: String) {
                         main_userDo.text = "완료수 : $userDo"
                         main_userAdd.text = "등록수 : $userAdd"
@@ -275,6 +323,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 menuOpen = false
             }
             this.main_notice.id -> {
+                var intent = Intent(this,AddNoticeActivity::class.java)
+                intent.putExtra("name",name)
+                intent.putExtra("roomCode",code)
+                startActivity(intent)
                 closeMenu()
                 menuOpen = false
             }

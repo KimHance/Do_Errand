@@ -36,7 +36,7 @@ android {
         jvmTarget = '1.8'
 //        useIR = true
     }
-    buildFeatures { // 뷰 바인딩 사용하겠다.
+    buildFeatures { // 뷰 바인딩
         viewBinding true
     }
 
