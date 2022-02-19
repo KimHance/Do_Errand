@@ -1,4 +1,4 @@
-package com.example.toyproject_housework
+package com.example.toyproject_housework.Dialog
 
 import android.app.Dialog
 import android.content.Context
@@ -13,6 +13,10 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
+import com.example.toyproject_housework.FCM.RetrofitInstance
+import com.example.toyproject_housework.FCM.NotificationBody
+import com.example.toyproject_housework.R
+import com.example.toyproject_housework.Data.Todo
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -24,7 +28,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.time.LocalDate
 
-class CustomDialog(context: Context) : View.OnClickListener{
+class TodoDialog(context: Context) : View.OnClickListener{
 
     var db = FirebaseFirestore.getInstance()
     var rdb = Firebase.database.reference
@@ -43,7 +47,7 @@ class CustomDialog(context: Context) : View.OnClickListener{
         onClickListener = listener
     }
 
-    fun showDialog(id : String ,code : String, todo : Todo ){ //어댑터에서 추가,완료 모드인지 param 으로 받아와야함
+    fun showDialog(id : String ,code : String, todo : Todo){ //어댑터에서 추가,완료 모드인지 param 으로 받아와야함
         dialog.setContentView(R.layout.dialog_todo)
         dialog.window!!.setLayout(WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT)
         dialog.setCanceledOnTouchOutside(true)
@@ -138,7 +142,8 @@ class CustomDialog(context: Context) : View.OnClickListener{
 
                         rdb.child(roomCode).child("userToken").get().addOnSuccessListener {
                             for(tk in it.children){
-                                val data = NotificationBody.NotificationData("집안일 해놔","새로운 집안일이 등록되었습니다.")
+                                val data =
+                                    NotificationBody.NotificationData("집안일 해놔", "새로운 집안일이 등록되었습니다.")
                                 val body = NotificationBody(tk.value.toString(), data)
                                 sendNotification(body)
                             }
@@ -199,7 +204,10 @@ class CustomDialog(context: Context) : View.OnClickListener{
 
                 rdb.child(roomCode).child("userToken").get().addOnSuccessListener {
                     for(tk in it.children){
-                        val data = NotificationBody.NotificationData("집안일 해놔","$name 님이 ${todo.title}을(를) 완료했습니다.")
+                        val data = NotificationBody.NotificationData(
+                            "집안일 해놔",
+                            "$name 님이 ${todo.title}을(를) 완료했습니다."
+                        )
                         val body = NotificationBody(tk.value.toString(), data)
                         sendNotification(body)
                     }
@@ -279,8 +287,10 @@ class CustomDialog(context: Context) : View.OnClickListener{
 
     // 플로팅 메뉴 열기
     private fun floatingOpen(){ //눌려져 있으면
-        val fabOpen = AnimationUtils.loadAnimation(dialog.context,R.anim.fab_open)
-        val fabRAntiClockwise = AnimationUtils.loadAnimation(dialog.context,R.anim.rotate_anticlockwise)
+        val fabOpen = AnimationUtils.loadAnimation(dialog.context, R.anim.fab_open)
+        val fabRAntiClockwise = AnimationUtils.loadAnimation(dialog.context,
+            R.anim.rotate_anticlockwise
+        )
 
         dialog.dialog_img.startAnimation(fabRAntiClockwise)
         dialog.floating_cleaning.isVisible=true
@@ -319,8 +329,8 @@ class CustomDialog(context: Context) : View.OnClickListener{
 
     // 플로팅 메뉴 닫기
     private fun floatingClose(){
-        val fabClose = AnimationUtils.loadAnimation(dialog.context,R.anim.fab_close)
-        val fabRClockwise = AnimationUtils.loadAnimation(dialog.context,R.anim.rotate_clockwise)
+        val fabClose = AnimationUtils.loadAnimation(dialog.context, R.anim.fab_close)
+        val fabRClockwise = AnimationUtils.loadAnimation(dialog.context, R.anim.rotate_clockwise)
 
         dialog.dialog_img.startAnimation(fabRClockwise)
 
@@ -352,6 +362,7 @@ class CustomDialog(context: Context) : View.OnClickListener{
         fun onClicked(userDo : String, userAdd : String)
     }
 
+    //알림 보내기
     private fun sendNotification(notification : NotificationBody){
         CoroutineScope(Dispatchers.IO).launch {
             try{

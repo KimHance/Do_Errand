@@ -1,4 +1,4 @@
-package com.example.toyproject_housework
+package com.example.toyproject_housework.Data
 
 data class Todo(
     var title : String,

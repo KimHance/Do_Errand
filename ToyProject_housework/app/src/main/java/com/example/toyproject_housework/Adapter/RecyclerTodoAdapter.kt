@@ -1,4 +1,4 @@
-package com.example.toyproject_housework
+package com.example.toyproject_housework.Adapter
 
 
 import android.content.Context
@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.toyproject_housework.R
+import com.example.toyproject_housework.Data.Todo
 import kotlinx.android.synthetic.main.item_list_todo.view.*
-import org.jetbrains.anko.find
 
 
 class RecyclerTodoAdapter( private val context: Context) : RecyclerView.Adapter<RecyclerTodoAdapter.ViewHolder>(){
@@ -24,7 +25,7 @@ class RecyclerTodoAdapter( private val context: Context) : RecyclerView.Adapter<
         this.listener = listener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):ViewHolder{
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_list_todo,parent,false)
         return ViewHolder(view)
     }
