@@ -111,15 +111,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                         initRecyclerTodo(this@MainActivity)
                     }
-                    override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                        Log.d("알디비","데이터 수정됨")
-                    }
-                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                        Log.d("알디비","데이터 순서 바뀜")
-                    }
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
+                    override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) { Log.d("알디비","데이터 수정됨") }
+                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) { Log.d("알디비","데이터 순서 바뀜") }
+                    override fun onCancelled(error: DatabaseError) {}
                 })
 
                 // 공지사항
@@ -131,6 +125,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         val context = map["내용"].toString()
                         val name = map["등록자"].toString()
                         noticeItem.add(Notice(noticeTitle.toString(),name,context))
+                        initRecyclerNotice(this@MainActivity)
                     }
                     override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
 
@@ -143,29 +138,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                         val notice = Notice(noticeTitle.toString(),name,context)
                         noticeItem.remove(notice)
+                        initRecyclerNotice(this@MainActivity)
                     }
-                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                        TODO("Not yet implemented")
-                    }
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
+                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                    override fun onCancelled(error: DatabaseError) {}
                 })
 
             }
             .addOnFailureListener {
                 Log.d("디비","실패")
             }
-
-//        val noticeList = ArrayList<Notice>()
-//
-//        noticeList.add(Notice("나","임시 공지사항","응"))
-//        noticeList.add(Notice("현수","응 임시","임시"))
-//        noticeList.add(Notice("접니다","킹현수;; 똑똑 지니어스","임시"))
-//        noticeList.add(Notice("저에요","ㅎㅇㅎㅇ 임시","임시"))
-//
-//        val noticeAdapter = RecyclerNoticeAdapter(this)
-//        Recycler_noticeList.adapter = noticeAdapter
 
         main_family.setOnClickListener(this)
         main_invite.setOnClickListener(this)
@@ -212,6 +194,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         noticeAdapter = RecyclerNoticeAdapter(this)
         Recycler_noticeList.adapter = noticeAdapter
         noticeAdapter.items = noticeItem
+        Log.d("Notice아이템", "현재 아이템 $noticeItem")
 
         noticeAdapter.setOnItemClickListener(object : RecyclerNoticeAdapter.OnItemClickListener{
             override fun onItemClick(v: View, data: Notice, pos: Int) {
@@ -226,8 +209,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
 
                 dialog.setOnClickListener(object : NoticeDialog.OnDialogClickListener{
-                    override fun onClicked(editedContext: String) {
-                        data.notice = editedContext
+                    override fun onClicked(editedContext: String, editedTitle : String) {
                         initRecyclerNotice(this@MainActivity)
                     }
                 })
@@ -236,16 +218,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-
-
-
-
     private fun initRecyclerTodo(context : Context) {
         Log.d("리사이클러","Todo 호출")
         todoAdapter = RecyclerTodoAdapter(this)
         Recycler_todoList.adapter = todoAdapter
         todoAdapter.items = addItem
-        Log.d("아이템", "현재 아이템 $addItem")
+        Log.d("Todo아이템", "현재 아이템 $addItem")
 
         todoAdapter.setOnItemClickListener(object : RecyclerTodoAdapter.OnItemClickListener{
             override fun onItemClick(v: View, data: Todo, pos: Int) {

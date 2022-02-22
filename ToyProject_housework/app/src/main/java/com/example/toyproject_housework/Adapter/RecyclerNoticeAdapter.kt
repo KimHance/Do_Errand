@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toyproject_housework.Data.Notice
@@ -40,9 +39,11 @@ class RecyclerNoticeAdapter(private val context: Context) : RecyclerView.Adapter
         private var view : View = v
 
         fun bind(item: Notice){
-            view.userName.text = item.title
+            view.noticeListTitle.text = item.title
+            view.notice.text = item.notice
 
             val pos =adapterPosition
+
             if(pos!=RecyclerView.NO_POSITION){
                 view.findViewById<CardView>(R.id.notice_card).setOnClickListener {
                     listener?.onItemClick(itemView,item,pos)

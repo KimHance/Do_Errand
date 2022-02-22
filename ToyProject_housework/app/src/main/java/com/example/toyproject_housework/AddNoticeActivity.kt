@@ -23,20 +23,27 @@ class AddNoticeActivity : AppCompatActivity() {
         var code = intent.getStringExtra("roomCode") // 룸코드
         var name = intent.getStringExtra("name") // 유저이름
 
+        binding.noticeUser.text = name
+
         binding.noticeCancle.setOnClickListener {
             finish()
         }
 
         binding.noticeOK.setOnClickListener {
-            var noticeContext = binding.noticeNotice.text.toString()
-            var noticeTitle = binding.noticeTitle.text.toString()
-            val map = mutableMapOf(
-                "등록자" to name,
-                "내용" to noticeContext
-            )
-            rdb.child(code.toString()).child("notice").child(noticeTitle).setValue(map)
-            toast("게시글 등록이 완료되었습니다")
-            finish()
+            if(binding.noticeTitle.text.isNullOrBlank() || binding.noticeNotice.text.isNullOrBlank())
+            {
+                toast("빈칸이 존재합니다.")
+            }else{
+                var noticeContext = binding.noticeNotice.text.toString()
+                var noticeTitle = binding.noticeTitle.text.toString()
+                val map = mutableMapOf(
+                    "등록자" to name,
+                    "내용" to noticeContext
+                )
+                rdb.child(code.toString()).child("notice").child(noticeTitle).setValue(map)
+                toast("게시글 등록이 완료되었습니다")
+                finish()
+            }
         }
 
     }
