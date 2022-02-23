@@ -36,7 +36,7 @@ object RetrofitInstance {
         override fun intercept(chain: Interceptor.Chain)
                 : Response = with(chain) {
             val newRequest = request().newBuilder()
-                .addHeader("Authorization", "key=키값")
+                .addHeader("Authorization", "key=")
                 .addHeader("Content-Type", "application/json")
                 .build()
             proceed(newRequest)

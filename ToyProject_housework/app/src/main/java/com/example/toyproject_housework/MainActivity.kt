@@ -297,6 +297,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 menuOpen = false
             }
             this.main_family.id -> {
+                var intent = Intent(this,FamilyActivity::class.java)
+                intent.putExtra("roomCode",code)
+                startActivity(intent)
                 closeMenu()
                 menuOpen = false
             }

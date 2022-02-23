@@ -17,6 +17,7 @@
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/drawable/spinner_background.xml" value="0.1" />
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/activity_addnotice.xml" value="0.15756578947368421" />
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/activity_enterroom.xml" value="0.264" />
+        <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/activity_family.xml" value="0.15756578947368421" />
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/activity_invite_code.xml" value="0.15756578947368421" />
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/activity_login.xml" value="0.264" />
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/activity_main.xml" value="0.176" />
@@ -28,6 +29,7 @@
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/dialog_notice.xml" value="0.2" />
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/dialog_todo.xml" value="0.16" />
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/item_family.xml" value="0.24947916666666667" />
+        <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/item_grid_family.xml" value="0.1415929203539823" />
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/item_list.xml" value="0.25" />
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/item_list_notice.xml" value="0.176" />
         <entry key="..\:/Users/rldkv/AndroidStudioProjects/ToyProject_housework/app/src/main/res/layout/item_list_todo.xml" value="0.24947916666666667" />

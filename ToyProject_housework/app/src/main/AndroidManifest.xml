@@ -29,6 +29,7 @@
         <activity android:name=".EnterRoomActivity"/>
         <activity android:name=".InviteActivity"/>
         <activity android:name=".AddNoticeActivity"/>
+        <activity android:name=".FamilyActivity"/>
 
         <service android:name=".FCM.MyFCM"
             android:enabled="true"
