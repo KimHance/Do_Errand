@@ -25,6 +25,8 @@ class RoomActivity : AppCompatActivity() {
         setContentView(R.layout.activity_room)
 
 
+
+
         auth = FirebaseAuth.getInstance()
         val userIDString = auth?.currentUser?.uid.toString()
 

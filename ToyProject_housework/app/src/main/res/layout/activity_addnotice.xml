@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#94E4B6">
+    android:background="@color/main">
 
     <TextView
         android:id="@+id/copyright8"
@@ -50,7 +50,7 @@
         android:layout_marginBottom="48dp"
         android:background="@drawable/btn_white"
         android:text="등록"
-        android:textColor="#94E4B6"
+        android:textColor="@color/main"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -65,7 +65,7 @@
         android:layout_marginBottom="49dp"
         android:background="@drawable/btn_white"
         android:text="취소"
-        android:textColor="#94E4B6"
+        android:textColor="@color/main"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

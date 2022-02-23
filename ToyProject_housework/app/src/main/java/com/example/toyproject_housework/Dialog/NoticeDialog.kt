@@ -1,16 +1,12 @@
 package com.example.toyproject_housework.Dialog
 
-import android.app.Application
 import android.app.Dialog
 import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
-import android.content.Context.INPUT_SERVICE
+
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import com.example.toyproject_housework.Data.Notice
 import com.example.toyproject_housework.R
@@ -24,6 +20,8 @@ class NoticeDialog(context : Context) {
     val context= context
     var db = FirebaseFirestore.getInstance()
     var rdb = Firebase.database.reference
+
+
 
     private val dialog = Dialog(context)
     private lateinit var onClickListener : OnDialogClickListener
@@ -53,6 +51,7 @@ class NoticeDialog(context : Context) {
         title.setText(notice.title)
         userName.text = notice.userName
         noticeContext.setText(notice.notice)
+
 
         //삭제하기 위해 미리 내용들 저장
         val bfTitle = title.text.toString()
@@ -102,6 +101,7 @@ class NoticeDialog(context : Context) {
             title.setSelection(title.length())
 
 
+
         }
         btnCancel.setOnClickListener {
             //수정하기, 삭제하기 활성화
@@ -131,9 +131,6 @@ class NoticeDialog(context : Context) {
             rdb.child(code).child("notice").child(title.text.toString()).setValue(map)
             dialog.dismiss()
         }
-
-
-
 
 
     }

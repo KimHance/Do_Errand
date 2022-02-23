@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toyproject_housework.Data.Family
 import com.example.toyproject_housework.R
@@ -37,6 +38,10 @@ class RecyclerFamilyAdapter( private val context: Context) : RecyclerView.Adapte
                 "아빠" ->{view.family_img.setImageResource(R.drawable.green_dad)}
                 "엄마" ->{view.family_img.setImageResource(R.drawable.green_mom)}
                 "딸" ->{view.family_img.setImageResource(R.drawable.green_daughter)}
+            }
+
+            val pos =adapterPosition
+            if(pos!=RecyclerView.NO_POSITION){
             }
         }
     }

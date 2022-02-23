@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.toyproject_housework.Adapter.RecyclerFamilyAdapter
 import com.example.toyproject_housework.Data.Family
 import com.example.toyproject_housework.databinding.ActivityFamilyBinding
@@ -44,8 +45,6 @@ class FamilyActivity : AppCompatActivity() {
             }
 
 
-
-
         binding.familyBtnBack.setOnClickListener {
             finish()
         }
@@ -58,8 +57,10 @@ class FamilyActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerFamily(context : Context){
+        val gridLayoutManager = GridLayoutManager(applicationContext,2)
         familyAdapter = RecyclerFamilyAdapter(this)
         binding.RecyclerFamilyList.adapter = familyAdapter
         familyAdapter.items = familyItem
+        binding.RecyclerFamilyList.layoutManager=gridLayoutManager
     }
 }

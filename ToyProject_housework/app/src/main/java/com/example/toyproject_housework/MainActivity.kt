@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
@@ -50,6 +51,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val addItem = mutableListOf<Todo>()
     private val noticeItem = mutableListOf<Notice>()
     lateinit var id : String
+
+
 
     @SuppressLint("StringFormatInvalid")
     override fun onCreate(savedInstanceState: Bundle?) {
