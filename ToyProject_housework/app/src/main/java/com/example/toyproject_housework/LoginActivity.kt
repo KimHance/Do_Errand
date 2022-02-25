@@ -27,6 +27,7 @@ class LoginActivity : AppCompatActivity() {
 
         login_register.setOnClickListener {
             startActivity<RegisterActivity>()
+            overridePendingTransition(R.anim.slide_up,R.anim.slide_up_exit)
         }
         login_login.setOnClickListener {
             val email = login_id.text.toString()
@@ -47,6 +48,7 @@ class LoginActivity : AppCompatActivity() {
                         if(task.isSuccessful){
                             toast("로그인 성공")
                             moveMainActivity(auth?.currentUser)
+
                         }else{
                             toast("로그인 실패")
                         }
@@ -71,10 +73,12 @@ class LoginActivity : AppCompatActivity() {
                     if(room == "not yet"){
                         Log.d("move","방 아직 없음")
                         startActivity<RoomActivity>()
+                        overridePendingTransition(R.anim.slide_up,R.anim.slide_up_exit)
                         login_passwd.setText("")
                     }else{
                         Log.d("move","메인으로")
                         startActivity<MainActivity>()
+                        overridePendingTransition(R.anim.slide_up,R.anim.slide_up_exit)
                         login_passwd.setText("")
                     }
                 }

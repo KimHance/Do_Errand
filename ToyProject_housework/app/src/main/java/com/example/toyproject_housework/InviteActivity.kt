@@ -16,6 +16,7 @@ class InviteActivity : AppCompatActivity() {
 
         invite_back.setOnClickListener {
             finish()
+            overridePendingTransition(R.anim.slide_down,R.anim.slide_down_exit)
         }
 
     }

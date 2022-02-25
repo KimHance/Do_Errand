@@ -47,12 +47,14 @@ class FamilyActivity : AppCompatActivity() {
 
         binding.familyBtnBack.setOnClickListener {
             finish()
+            overridePendingTransition(R.anim.slide_down,R.anim.slide_down_exit)
         }
 
         binding.familyInvite.setOnClickListener {
             var intent = Intent(this,InviteActivity::class.java)
             intent.putExtra("roomCode",code)
             startActivity(intent)
+            overridePendingTransition(R.anim.slide_up,R.anim.slide_up_exit)
         }
     }
 

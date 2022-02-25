@@ -191,7 +191,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
-
     private fun initRecyclerNotice(context:Context){
         Log.d("리사이클러","Notice 호출")
         noticeAdapter = RecyclerNoticeAdapter(this)
@@ -296,6 +295,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 var intent = Intent(this,InviteActivity::class.java)
                 intent.putExtra("roomCode",code)
                 startActivity(intent)
+                overridePendingTransition(R.anim.slide_up,R.anim.slide_up_exit)
                 closeMenu()
                 menuOpen = false
             }
@@ -303,6 +303,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 var intent = Intent(this,FamilyActivity::class.java)
                 intent.putExtra("roomCode",code)
                 startActivity(intent)
+                overridePendingTransition(R.anim.slide_up,R.anim.slide_up_exit)
                 closeMenu()
                 menuOpen = false
             }
@@ -311,6 +312,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 intent.putExtra("name",name)
                 intent.putExtra("roomCode",code)
                 startActivity(intent)
+                overridePendingTransition(R.anim.slide_up,R.anim.slide_up_exit)
                 closeMenu()
                 menuOpen = false
             }

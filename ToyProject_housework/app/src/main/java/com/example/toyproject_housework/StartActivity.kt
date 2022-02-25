@@ -12,6 +12,7 @@ class StartActivity : AppCompatActivity() {
 
         btn_start.setOnClickListener{
             startActivity<LoginActivity>()
+            overridePendingTransition(R.anim.slide_up,R.anim.slide_up_exit)
             finish()
         }
     }

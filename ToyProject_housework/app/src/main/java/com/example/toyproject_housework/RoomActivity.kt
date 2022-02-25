@@ -50,6 +50,7 @@ class RoomActivity : AppCompatActivity() {
 
         room_enter.setOnClickListener {
             startActivity<EnterRoomActivity>()
+            overridePendingTransition(R.anim.slide_down,R.anim.slide_down_exit)
         }
 
         room_make.setOnClickListener {
@@ -79,6 +80,7 @@ class RoomActivity : AppCompatActivity() {
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()
+                        overridePendingTransition(R.anim.slide_up,R.anim.slide_up_exit)
                     }
                     .addOnFailureListener {
                         Log.d("db","고유방 만들기 실패")

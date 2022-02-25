@@ -64,6 +64,7 @@ class RegisterActivity : AppCompatActivity(){
         // 뒤로가기
         register_cancel.setOnClickListener {
             finish()
+            overridePendingTransition(R.anim.slide_down,R.anim.slide_down_exit)
         }
     }
     private fun createUser(email: String, passwd: String){
@@ -92,6 +93,7 @@ class RegisterActivity : AppCompatActivity(){
                                 Log.d("db","파이어스토어 유저 저장 실패")
                             }
                         finish()
+                        overridePendingTransition(R.anim.slide_down,R.anim.slide_down_exit)
                     }
                 }
     }

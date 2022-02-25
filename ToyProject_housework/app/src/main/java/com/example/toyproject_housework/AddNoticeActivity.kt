@@ -27,6 +27,7 @@ class AddNoticeActivity : AppCompatActivity() {
 
         binding.noticeCancle.setOnClickListener {
             finish()
+            overridePendingTransition(R.anim.slide_down,R.anim.slide_down_exit)
         }
 
         binding.noticeOK.setOnClickListener {
@@ -43,6 +44,7 @@ class AddNoticeActivity : AppCompatActivity() {
                 rdb.child(code.toString()).child("notice").child(noticeTitle).setValue(map)
                 toast("게시글 등록이 완료되었습니다")
                 finish()
+                overridePendingTransition(R.anim.slide_down,R.anim.slide_down_exit)
             }
         }
 
