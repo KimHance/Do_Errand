@@ -22,7 +22,7 @@
 
 ---
 
-##### 화면 구성
+##### BLOG
 
-추후 추가
+진행사항 기록
 https://medium.com/@KiManSu/11-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%ED%86%A0%EC%9D%B4-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-1-d923100a3287
